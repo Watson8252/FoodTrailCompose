@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Food Trail</string>
+
+    <string name="submit_choices_button">Submit</string>
+    
+    <string name="choice_Burgers">Burgers</string>
+    <string name="choice_Chinese">Chinese</string>
+    <string name="choice_Japanese">Japanese</string>
+    <string name="choice_Mexican">Mexican</string>
+    <string name="choice_Seafood">Seafood</string>
+    <string name="choice_Shawarma">Shawarma</string>
+    <string name="choice_Sushi">Sushi</string>
+    <string name="choice_Tacos">Tacos</string>
+    <string name="choice_Turkish">Turkish</string>
+</resources>
