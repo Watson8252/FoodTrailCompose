@@ -1,7 +1,10 @@
 package com.sabredg.android.foodtrail.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -22,12 +26,12 @@ import com.sabredg.android.foodtrail.model.Chosen
 
 @Composable
 fun ChoicesPage(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    chosen: Chosen
 ) {
-    var chosen by rememberSaveable { mutableStateOf(Chosen()) }
 
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         ChoicesList(
             chosen = chosen,
@@ -39,8 +43,8 @@ fun ChoicesPage(
 
         ChosenList(
             chosen = chosen,
+            onEditChosen = { chosen = it },
             modifier = modifier
-                .fillMaxWidth()
         )
 
         SubmitButton()
@@ -57,11 +61,16 @@ private fun ChoicesList(
     var choiceAdded by rememberSaveable { mutableStateOf<Choice?>(null) }
 
     choiceAdded?.let { choice ->
-        onEditChosen(chosen.addChoice(choice))
+        if (chosen.chosenList.contains(choice).not() && chosen.chosenList.size <3){
+            onEditChosen(chosen.addChoice(choice))
+        }
     }
+    Text(text = "Choose From:")
 
     LazyColumn(
         modifier = modifier
+            .height(400.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         items(Choice.entries.toTypedArray()) { choice ->
@@ -78,13 +87,26 @@ private fun ChoicesList(
 @Composable
 private fun ChosenList(
     chosen: Chosen,
+    onEditChosen: (Chosen) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var choiceRemoved by rememberSaveable { mutableStateOf<Choice?>(null) }
+
+    choiceRemoved?.let { choice ->
+        onEditChosen(chosen.removeChoice(choice))
+    }
+
     LazyRow(
-        modifier = modifier
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center
     ) {
         items(chosen.chosenList) {choice ->
-            Text(text = choice.toString())
+            Button(
+                modifier = Modifier,
+                onClick = {}
+            ){
+                Text(text = choice.toString())
+            }
         }
     }
 }
@@ -94,8 +116,7 @@ private fun SubmitButton(
     modifier: Modifier = Modifier
 ) {
     Button(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         onClick = { /**TODO**/ }
     ) {
         Text(text = stringResource(R.string.submit_choices_button))
